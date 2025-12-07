@@ -10,7 +10,7 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 
 # Instala dependências
-RUN npm ci
+RUN npm install --frozen-lockfile --legacy-peer-deps
 
 # Copia o código fonte
 COPY . .
