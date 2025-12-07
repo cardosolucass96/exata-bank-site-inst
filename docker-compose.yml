@@ -2,11 +2,7 @@ version: '3.8'
 
 services:
   exata-bank-frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: exata-bank-prod
-    restart: unless-stopped
+    image: ghcr.io/cardosolucass96/exata-bank-site-inst:latest
     environment:
       - NODE_ENV=production
     networks:

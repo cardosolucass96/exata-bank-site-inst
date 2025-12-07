@@ -1,8 +1,45 @@
 # 🚀 Deploy no Portainer - Exata Bank
 
-Guia rápido para subir a aplicação no Portainer.
+Guia rápido para subir a aplicação no Portainer usando GitHub Container Registry.
 
-## Método 1: Git Repository (Recomendado)
+## 📦 Pré-requisito: Build da Imagem
+
+A imagem Docker é buildada automaticamente via GitHub Actions e publicada no GitHub Container Registry.
+
+### 1. Ativar GitHub Actions
+```bash
+git add .
+git commit -m "feat: add github actions for docker build"
+git push origin main
+```
+
+### 2. Aguardar o build
+- Acesse: https://github.com/cardosolucass96/exata-bank-site-inst/actions
+- Aguarde o workflow completar (~3-5 min)
+- A imagem será publicada em: `ghcr.io/cardosolucass96/exata-bank-site-inst:latest`
+
+### 3. Tornar a imagem pública (necessário na primeira vez)
+1. Vá em: https://github.com/cardosolucass96?tab=packages
+2. Clique no pacote `exata-bank-site-inst`
+3. **Package settings** → **Change visibility** → **Public**
+
+---
+
+## Método 1: Web Editor (Mais Rápido)
+
+### 1. No Portainer
+1. Acesse seu Portainer
+2. Selecione o **Environment** (servidor Docker)
+3. Menu lateral: **Stacks** → **Add stack**
+4. Preencha:
+   - **Name**: `exata-bank`
+   - **Build method**: `Web editor`
+5. Cole o conteúdo do `docker-compose.yml`
+6. Clique em **Deploy the stack**
+
+---
+
+## Método 2: Git Repository
 
 ### 1. Commit e push do código
 ```bash
