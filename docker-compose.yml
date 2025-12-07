@@ -26,6 +26,7 @@ services:
       labels:
         # Habilita Traefik
         - traefik.enable=true
+        - traefik.docker.network=CardosoNet
         # Domínio e roteamento
         - traefik.http.routers.exata-bank.rule=Host(`exata-bank.cardosolucas.com`)
         - traefik.http.routers.exata-bank.entrypoints=websecure
@@ -34,18 +35,7 @@ services:
         - traefik.http.routers.exata-bank.service=exata-bank
         # Serviço (porta interna do Nginx)
         - traefik.http.services.exata-bank.loadbalancer.server.port=80
-        - traefik.http.services.exata-bank.loadbalancer.passHostHeader=1
-        # Middlewares de segurança
-        - traefik.http.routers.exata-bank.middlewares=exata-bank-headers,exata-bank-compress
-        # Headers de segurança
-        - traefik.http.middlewares.exata-bank-headers.headers.framedeny=true
-        - traefik.http.middlewares.exata-bank-headers.headers.browserxssfilter=true
-        - traefik.http.middlewares.exata-bank-headers.headers.contenttypenosniff=true
-        - traefik.http.middlewares.exata-bank-headers.headers.stsSeconds=31536000
-        - traefik.http.middlewares.exata-bank-headers.headers.stsIncludeSubdomains=true
-        - traefik.http.middlewares.exata-bank-headers.headers.stsPreload=true
-        # Compressão
-        - traefik.http.middlewares.exata-bank-compress.compress=true
+        - traefik.http.services.exata-bank.loadbalancer.passHostHeader=true
     
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
