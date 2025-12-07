@@ -7,7 +7,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copia arquivos de dependências
-COPY package*.json ./
+COPY package.json package-lock.json ./
 
 # Instala dependências
 RUN npm ci
