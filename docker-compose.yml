@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  exata-bank-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: exata-bank-prod
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - CardosoNet
+    labels:
+      # Habilita Traefik
+      - "traefik.enable=true"
+      # Domínio e roteamento
+      - "traefik.http.routers.exata-bank.rule=Host(`exata-bank.cardosolucas.com`)"
+      - "traefik.http.routers.exata-bank.entrypoints=websecure"
+      - "traefik.http.routers.exata-bank.tls.certresolver=letsencrypt"
+      # Serviço (porta interna do Nginx)
+      - "traefik.http.services.exata-bank.loadbalancer.server.port=80"
+      # Middlewares de segurança
+      - "traefik.http.routers.exata-bank.middlewares=exata-bank-headers,exata-bank-compress"
+      # Headers de segurança
+      - "traefik.http.middlewares.exata-bank-headers.headers.framedeny=true"
+      - "traefik.http.middlewares.exata-bank-headers.headers.browserxssfilter=true"
+      - "traefik.http.middlewares.exata-bank-headers.headers.contenttypenosniff=true"
+      - "traefik.http.middlewares.exata-bank-headers.headers.stsSeconds=31536000"
+      - "traefik.http.middlewares.exata-bank-headers.headers.stsIncludeSubdomains=true"
+      - "traefik.http.middlewares.exata-bank-headers.headers.stsPreload=true"
+      # Compressão
+      - "traefik.http.middlewares.exata-bank-compress.compress=true"
+      # Metadados
+      - "com.exata-bank.description=Exata Bank - Crédito Consignado Platform"
+      - "com.exata-bank.version=1.0.0"
+    # Recursos limitados para otimizar uso em produção
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    # Health check
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
